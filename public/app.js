@@ -1,9 +1,9 @@
-//var socket = io('/socket' + window.location.pathname);
+//var socket = io('/'+window.location.pathname.split('/')[2]);
 //socket.io.uri = '/socket' + window.location.pathname;
-console.log(window.location.pathname);
+console.log('/'+window.location.pathname.split('/')[2]);
 
-var socket = io('http://localhost:8888', {path: '/socket' + window.location.pathname})
-socket.nsp = '/socket' + window.location.pathname;
+var socket = io('/'+window.location.pathname.split('/')[2])
+//socket.nsp = window.location.pathname.split('/')[2];
 
 // module aliases
 var Engine = Matter.Engine,
@@ -134,12 +134,10 @@ const jump = (player) => {
 	Body.applyForce(ss, Vector.clone(player.position), Vector.create(0, -0.1))
 }
 
-var connId = -1;
+var connId = 1;
 
 socket.on('pushConnectionId', (data) => {
-    if(connId == -1){
-        connId = data.id;
-    }
+    connId = data.id;
 })
 
 socket.on('jump', (data) => {
@@ -156,16 +154,14 @@ socket.on('jump', (data) => {
 
 $('body').keypress((e) => {
 	if(e.keyCode == 32){
-        if(playerOne.parts[0].position.y > 505){
+        if(playerOne.parts[0].position.y > 505 && connId == 1){
             jump(playerOne)
             socket.emit('jump', { playerId: 1 });
         }
 
-	}
-    else{
-        if(playerTwo.parts[0].position.y > 505){
+        else if(playerTwo.parts[0].position.y > 505 && connId == 2){
             jump(playerTwo)
             socket.emit('jump', { playerId: 2 });
         }
-    }
+	}
 });
