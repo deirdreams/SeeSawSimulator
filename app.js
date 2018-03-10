@@ -4,7 +4,8 @@ const	app			= require('express')(),
 		io 			= require('socket.io')(server);
 
 var		lobbies		= new Map(),
-		lobbiesFull = false; 
+		lobbiesFull = false,
+		activePlayers = 0;
 
 server.listen(8888);
 
@@ -13,8 +14,6 @@ app.use('/static', express.static('public'))
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
-
-var activePlayers = 0;
 
 io.on('connection', function (socket) {
 	console.log('connection');
@@ -37,7 +36,7 @@ io.on('connection', function (socket) {
 	});
 
   socket.on('create', function (data) {
-
+  	let newGroupId
 
   });
 
@@ -54,7 +53,13 @@ io.on('connection', function (socket) {
 
 function findFreeLobby() {
 	lobbies.forEach(function(val, key) {
-		if (key < 2) {return val;}
+		if (key < 2) {
+			lobbiesFull = false;
+			return val;
+		} else {
+			lobbiesFull = true;
+			return lobbiesFull;
+		}
 	});
 }
 

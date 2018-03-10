@@ -105,10 +105,19 @@ const jump = (player) => {
 
 var connId = -1;
 
+socket.on('startConnection', (data) => {
+
+})
+
+
 socket.on('pushConnectionId', (data) => {
     if(connId == -1){
         connId = data.id;
     }
+})
+
+socket.on('joinLobby', (data) => {
+    console.log('You are player ' + data.playerId + ' in lobby ' + data.lobbyId);
 })
 
 socket.on('jumpEvent', (data) => {
@@ -122,6 +131,35 @@ socket.on('jumpEvent', (data) => {
     }
 })
 
+
+/* HELPER FUNCTIONS */
+
+
+function findFreeLobby() {
+    lobbies.forEach(function(val, key) {
+        if (key < 2) {
+            lobbiesFull = false;
+            return val;
+        } else {
+            lobbiesFull = true;
+            return lobbiesFull;
+        }
+    });
+}
+
+//Generating 5-digit ids
+function makeid() {
+    var id = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 5; i++)
+        id += possible.charAt(Math.floor(Math.random() * possible.length));
+    
+    if (lobbies.includes(id)) {
+        return makeid();
+    } else {
+        return id;
+    }
+}
 
 
 $('body').keypress((e) => {
