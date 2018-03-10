@@ -129,12 +129,7 @@ const jump = (player) => {
 	Body.applyForce(ss, Vector.clone(player.position), Vector.create(0, -0.1))
 }
 
-var connId = 1;
-
-socket.on('startConnection', (data) => {
-
-})
-
+var connId = -1;
 
 socket.on('pushConnectionId', (data) => {
     if(connId == -1){
