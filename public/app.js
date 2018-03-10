@@ -1,3 +1,5 @@
+var socket = io('http://0c823424.ngrok.io');
+
 // module aliases
 var Engine = Matter.Engine,
         Render = Matter.Render,
@@ -66,19 +68,46 @@ Render.run(render);
 
 const jump = (player) => {
 	console.log(player.position.y)
-	if(player.position.y > 505){
+	
 		Body.applyForce(player, Vector.clone(player.position), Vector.create(0, -0.01))
 		Body.applyForce(ss, Vector.clone(player.position), Vector.create(0, -0.1))
-	}
 }
+
+var connId = -1;
+
+socket.on('pushConnectionId', (data) => {
+    if(connId == -1){
+        connId = data.id;
+    }
+})
+
+socket.on('jumpEvent', (data) => {
+    console.log('boink received');
+    console.log(data)
+    if(data.playerId == 1) {
+        jump(player1);
+    }
+    else {
+        jump(player2);
+    }
+})
 
 
 
 $('body').keypress((e) => {
 	if(e.keyCode == 32){
-		jump(player1)
-	}
-	else{
-		jump(player2)
+        if(connId == 1){
+            if(player1.position.y > 505){
+                jump(player1)
+                socket.emit('jump', { playerId: 1 });
+            }
+        }
+        else{
+            if(player2.position.y > 505){
+                jump(player2)
+                socket.emit('jump', { playerId: 2 }); 
+            }
+        }
+		
 	}
 });
