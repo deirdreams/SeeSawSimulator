@@ -20,8 +20,8 @@ app.get('/game/*', function (req, res) {
 
 app.get('/socket/*', function(req, res){
 	console.log("socket connected");
-	console.log(req.originalUrl);
-	var nsp = io.of(req.originalUrl);
+	console.log(sanitiseUrl(req.originalUrl));
+	var nsp = io.of(sanitiseUrl(req.originalUrl));
 	nsp.on('connection', function (socket) {
 		console.log('Connected');
 		activePlayers++;
@@ -39,3 +39,8 @@ app.get('/socket/*', function(req, res){
 
 	});
 })
+
+function sanitiseUrl(url) {
+	let newUrl = url.split('/');
+	return '/socket/game/' + newUrl[3];
+}
