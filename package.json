@@ -1,0 +1,22 @@
+{
+  "name": "seesawsimulator",
+  "version": "1.0.0",
+  "description": "HackTheBurgh 2018 Challenge",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deirdreams/SeeSawSimulator.git"
+  },
+  "author": "DerChom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deirdreams/SeeSawSimulator/issues"
+  },
+  "homepage": "https://github.com/deirdreams/SeeSawSimulator#readme",
+  "dependencies": {
+    "socketio": "^1.0.0"
+  }
+}
