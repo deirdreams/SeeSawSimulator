@@ -1,4 +1,9 @@
-var socket = io('localhost:8888');
+//var socket = io('/socket' + window.location.pathname);
+//socket.io.uri = '/socket' + window.location.pathname;
+console.log(window.location.pathname);
+
+var socket = io('http://localhost:8888', {path: '/socket/' + window.location.pathname})
+socket.nsp = window.location.pathname;
 
 // module aliases
 var Engine = Matter.Engine,

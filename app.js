@@ -5,6 +5,7 @@ const	app			= require('express')(),
 
 var		lobbies		= new Map(),
 		lobbiesFull = false,
+		amountCalled = 0,
 		activePlayers = 0;
 
 server.listen(8888);
@@ -12,15 +13,19 @@ server.listen(8888);
 app.use('/static', express.static('public'))
 
 
-app.get('/*', function (req, res) {
+app.get('/game/*', function (req, res) {
 	console.log(req.originalUrl);
 	res.sendfile(__dirname + '/index.html');
+});
+
+app.get('/socket/*', function(req, res){
+	console.log("socket connected");
+	console.log(req.originalUrl);
 	var nsp = io.of(req.originalUrl);
 	nsp.on('connection', function (socket) {
 		console.log('Connected');
-		socket.emit('startConnection');
 		activePlayers++;
-		socket.emit('pushConnectionId', {id: activePlayers})
+		socket.broadcast.emit('pushConnectionId', {id: activePlayers})
 
 		socket.on('jump', function (data) {
 			socket.broadcast.emit('jump', {playerId: data.playerId})
@@ -33,4 +38,4 @@ app.get('/*', function (req, res) {
 		});
 
 	});
-});
+})
