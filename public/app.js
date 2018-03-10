@@ -1,4 +1,4 @@
-var socket = io('http://0c823424.ngrok.io');
+var socket = io('localhost:8888');
 
 // module aliases
 var Engine = Matter.Engine,
@@ -39,26 +39,82 @@ mouseConstraint = MouseConstraint.create(engine, {
 
 
 // create two boxes and a ground
-var player1 = Bodies.rectangle(255, 490, 30, 50, {render: {fillStyle: 'blue'}});
+//var player1 = Bodies.rectangle(255, 490, 30, 50, {render: {fillStyle: 'blue'}});
 var player2 = Bodies.rectangle(545, 490, 30, 40);
 var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 var anchor = Bodies.rectangle(400, 600, 800, 50.5, { isStatic: true });
 
-var ss = Bodies.rectangle(400, 520, 320, 20);
+
+
+var playerOne = (() => {
+    var x = 255;
+    var y = 490;
+
+    var parts = [
+        Bodies.rectangle(x, y, 15, 25,  { isStatic: false, collisionFilter: { group: -1 } }), //body
+        Bodies.circle(x, y-15, 10,  { isStatic: false, collisionFilter: { group: -1 } }),    //head
+        Bodies.rectangle(x, y-15, 5, 15,  { isStatic: false, collisionFilter: { group: -1 } }), //arm
+        //Bodies.rectangle(x, y+15, 5, 15,  { isStatic: false, collisionFilter: { group: -1 } }), //leg
+    ]
+    var constraints = [
+        Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, -15), bodyB: parts[1], stiffness: 1, length: 0, render: {visible: false}}),
+        Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, -5), bodyB: parts[2], pointB: Vector.create(0, 8), stiffness: 1, length: 0, render: {visible: false}}),
+        //Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, 15), bodyB: parts[3], pointB: Vector.create(0, 5), stiffness: 1, length: 0, render: {visible: true}}),
+
+    ]
+
+    return {
+        constraints,
+        parts
+    }
+})();
+
+var playerTwo = (() => {
+    var x = 545;
+    var y = 490;
+
+    var parts = [
+        Bodies.rectangle(x, y, 15, 30,  { isStatic: false, collisionFilter: { group: -1 } }), //body
+        Bodies.circle(x, y-15, 10,  { isStatic: false, collisionFilter: { group: -1 } }),    //head
+        Bodies.rectangle(x, y-15, 5, 15,  { isStatic: false, collisionFilter: { group: -1 } }), //arm
+        //Bodies.rectangle(x, y+15, 5, 15,  { isStatic: false, collisionFilter: { group: -1 } }), //leg
+    ]
+    var constraints = [
+        Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, -15), bodyB: parts[1], stiffness: 1, length: 0, render: {visible: false}}),
+        Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, -5), bodyB: parts[2], pointB: Vector.create(0, 8), stiffness: 1, length: 0, render: {visible: false}}),
+        //Constraint.create({ bodyA: parts[0], pointA: Vector.create(0, 15), bodyB: parts[3], pointB: Vector.create(0, 5), stiffness: 1, length: 0, render: {visible: true}}),
+
+    ]
+
+    return {
+        constraints,
+        parts
+    }
+})();
+
+
+var ss = Bodies.rectangle(400, 520, 360, 20);
 
 
 // add all of the bodies to the world
 World.add(engine.world, [ss,
 	anchor,
-	player1, 
-	player2, 
+	//player1, 
+	//player2, 
 	ground, 
 	Constraint.create({ bodyA: ss, pointB: Vector.clone(ss.position),stiffness: 1, damping: 0.2,length: 0}),
-	Constraint.create({ pointA: Vector.create(ss.position.x-200, ss.position.y), bodyB: player1 ,stiffness: 1,length: 0, damping: 0.2, render: {visible: false}}),
-	Constraint.create({ pointA: Vector.create(ss.position.x-200, ss.position.y), bodyB: player2 ,stiffness: 1,length: 0, damping: 0.2, render: {visible: false}})
+	Constraint.create({ bodyA: ss, pointA: Vector.create(-150, 0), bodyB: playerOne.parts[0] ,stiffness: 0.1,length: 0, damping: 0.0, render: {visible: false}}),
+	Constraint.create({ bodyA: ss, pointA: Vector.create(150, 0), bodyB: playerTwo.parts[0] ,stiffness: 0.1,length: 0, damping: 0.0, render: {visible: false}})
 	]);
 
 
+World.add(engine.world, playerOne.parts);
+
+World.add(engine.world, playerOne.constraints);
+
+World.add(engine.world, playerTwo.parts);
+
+World.add(engine.world, playerTwo.constraints);
 
 // run the engine
 Engine.run(engine);
@@ -67,13 +123,13 @@ Engine.run(engine);
 Render.run(render);
 
 const jump = (player) => {
+    player = player.parts[0]
 	console.log(player.position.y)
-	
-		Body.applyForce(player, Vector.clone(player.position), Vector.create(0, -0.01))
-		Body.applyForce(ss, Vector.clone(player.position), Vector.create(0, -0.1))
+	Body.applyForce(player, Vector.clone(player.position), Vector.create(0, -0.01))
+	Body.applyForce(ss, Vector.clone(player.position), Vector.create(0, -0.1))
 }
 
-var connId = -1;
+var connId = 1;
 
 socket.on('startConnection', (data) => {
 
@@ -86,66 +142,30 @@ socket.on('pushConnectionId', (data) => {
     }
 })
 
-socket.on('joinLobby', (data) => {
-    console.log('You are player ' + data.playerId + ' in lobby ' + data.lobbyId);
-})
-
-socket.on('jumpEvent', (data) => {
+socket.on('jump', (data) => {
     console.log('boink received');
     console.log(data)
     if(data.playerId == 1) {
-        jump(player1);
+        jump(playerOne);
     }
     else {
-        jump(player2);
+        jump(playerTwo);
     }
 })
-
-
-/* HELPER FUNCTIONS */
-
-
-function findFreeLobby() {
-    lobbies.forEach(function(val, key) {
-        if (key < 2) {
-            lobbiesFull = false;
-            return val;
-        } else {
-            lobbiesFull = true;
-            return lobbiesFull;
-        }
-    });
-}
-
-//Generating 5-digit ids
-function makeid() {
-    var id = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 5; i++)
-        id += possible.charAt(Math.floor(Math.random() * possible.length));
-    
-    if (lobbies.includes(id)) {
-        return makeid();
-    } else {
-        return id;
-    }
-}
 
 
 $('body').keypress((e) => {
 	if(e.keyCode == 32){
-        if(connId == 1){
-            if(player1.position.y > 505){
-                jump(player1)
-                socket.emit('jump', { playerId: 1 });
-            }
+        if(playerOne.parts[0].position.y > 505){
+            jump(playerOne)
+            socket.emit('jump', { playerId: 1 });
         }
-        else{
-            if(player2.position.y > 505){
-                jump(player2)
-                socket.emit('jump', { playerId: 2 }); 
-            }
-        }
-		
+
 	}
+    else{
+        if(playerTwo.parts[0].position.y > 505){
+            jump(playerTwo)
+            socket.emit('jump', { playerId: 2 });
+        }
+    }
 });
