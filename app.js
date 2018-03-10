@@ -11,7 +11,8 @@ server.listen(8888);
 
 app.use('/static', express.static('public'))
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
+	console.log(req.originalUrl);
   res.sendfile(__dirname + '/index.html');
 });
 
