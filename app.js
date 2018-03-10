@@ -11,6 +11,8 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
+app.use(express.static('public'))
+
 io.on('connection', function (socket) {
 	//send event to everyone
   // socket.emit('news', { hello: 'world' });
