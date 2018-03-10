@@ -154,12 +154,12 @@ socket.on('jump', (data) => {
 
 $('body').keypress((e) => {
 	if(e.keyCode == 32){
-        if(playerOne.parts[0].position.y > 505 && connId == 1){
+        if(playerOne.parts[0].position.y > 0 && connId == 1){
             jump(playerOne)
             socket.emit('jump', { playerId: 1 });
         }
 
-        else if(playerTwo.parts[0].position.y > 505 && connId == 2){
+        else if(playerTwo.parts[0].position.y > 0 && connId == 2){
             jump(playerTwo)
             socket.emit('jump', { playerId: 2 });
         }
