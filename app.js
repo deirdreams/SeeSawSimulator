@@ -12,6 +12,10 @@ server.listen(8888);
 
 app.use('/static', express.static('public'))
 
+app.get('/', function (req, res){
+	res.sendfile(__dirname + '/landing.html');
+})
+
 
 app.get('/game/*', function (req, res) {
 	console.log(req.originalUrl);
