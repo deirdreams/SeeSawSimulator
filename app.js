@@ -15,32 +15,22 @@ app.use('/static', express.static('public'))
 app.get('/*', function (req, res) {
 	console.log(req.originalUrl);
 	res.sendfile(__dirname + '/index.html');
-});
+	var nsp = io.of(req.originalUrl);
+	nsp.on('connection', function (socket) {
+		console.log('Connected');
+		socket.emit('startConnection');
+		activePlayers++;
+		socket.emit('pushConnectionId', {id: activePlayers})
 
-io.on('connection', function (socket) {
-	console.log('Connected');
-	socket.emit('startConnection');
+		socket.on('jump', function (data) {
+			socket.broadcast.emit('jump', {playerId: data.playerId})
+		console.log(data);
+		});
 
-	socket.on('joinLobby', (data) => {
-		socket.join(data.lobbyID);
-		console.log('Lobby ' + data.lobbyID + ' joined!');
-	})
+		socket.on('disconnect', function () {
+			nsp.emit('user disconnected');
+			activePlayers--;
+		});
 
-
-	// socket.emit('pushConnectionId', {id: activePlayers})
-
-
-	//change to handle lobbies
-	socket.on('jump', function (data) {
-		//send to all clients (including sender) - user broadcast.emit to exclude sender
-		socket.broadcast.emit('jumpEvent', {playerId: data.playerId})
-	console.log(data);
 	});
-
-
-	socket.on('disconnect', function () {
-		io.emit('user disconnected');
-		activePlayers--;
-	});
-
 });
