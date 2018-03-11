@@ -8,7 +8,7 @@ var		lobbies		= new Map(),
 		amountCalled = 0,
 		activePlayers = {};
 
-app.listen((process.env.PORT || 5000));
+server.listen((process.env.PORT || 5000));
 
 app.use('/static', express.static('public'))
 
