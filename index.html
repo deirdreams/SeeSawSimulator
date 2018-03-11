@@ -1,7 +1,7 @@
-<link rel="stylesheet" href="../static/style.css" />
-<body>
-<input class="session" type="text"></input><button onClick="window.location = $('.session').val()">Go To Session</button>
+<body style="background-image:linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%);">
+<div style="margin: 2vh 0 2vh 0"><input class="session" type="text" placeholder="Enter Lobby ID"></input><button onClick="window.location = $('.session').val()">Go To Lobby</button> <span>Current Score: <span id="score">0</span></span><button onClick="document.cookie = ''; document.cookie = 'free'; window.location = window.location;">Free Mode</button><button onClick="document.cookie = ''; window.location = window.location;">Easy Mode</button></div>
 
+<script src="../static/pathseg.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="../static/matter.js"></script>

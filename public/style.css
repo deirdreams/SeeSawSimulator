@@ -1,24 +1,49 @@
-.playground{
-	height: 50vw;
-	width: 50vw;
+body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background-image: linear-gradient( 135deg, #FFD3A5 10%, #FD6585 100%);
+	font-family: 'Pacifico', cursive;
+
 }
 
-.ss{
-	width: 30vw;
-	height: 1vw;
-	background-color: red;
-	display: flex;
-	justify-content: space-between;
-	animation: all 1s;
+.landing__content{
+	text-align: center;
 }
 
-.player{
-	width: 3vw;
-	height: 3vw;
-	transform: translateY(-3vw);
-	background-color: blue;
-	display: inline-block;
+.landing__button {
+	margin-top: 2vh;
+	text-align: center;
+	border-radius: 20px;
+    padding: 1vh 3vw 1vh 3vw;
+    border-color: #f5d2d3;
+    box-shadow: 0px 2px 5px #e0e0e0;
+    transition: all 0.2s ease;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.landing__button:hover{
+	transform: translateY(-0.5vh);
+	box-shadow: 0px 4px 10px #b1b1b1;
+	border-color: #f5d2d3;
+	background-color: #f5d2d3;
+}
+
+.landing__input {
+	height: 4vh;
+    width: 15vw;
+    border: none;
+    box-shadow: inset 2px 2px 7px 0px #dedede;
+ 	border-radius: 5px;
+ 	padding-left: 8px;
+}
+
+.landing__header{
+	font-size: 48px;
+	color: #ffffff;
+	margin-bottom: 1vh;
+	text-shadow: 1px 1px 4px #e65151;
 }

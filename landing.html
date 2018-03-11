@@ -1,3 +1,16 @@
-<input class="session" type="text"></input><button onClick="window.location = '/game/' + $('.session').val()">Go To Session</button>
+<link rel="stylesheet" href="../static/style.css" />
+<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+
+<div class="landing__content">
+	<div>
+		<p class="landing__header">SeeSaw Simulator</p>
+	</div>
+	<div>
+		<input class="session landing__input" type="text" placeholder="Enter Lobby ID"></input>
+	</div>
+	<div class="" >
+		<button class="landing__button" onClick="window.location = '/game/' + $('.session').val()">Go To Lobby</button>
+	</div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

@@ -28,14 +28,25 @@ function registerNamespace(url){
 	activePlayers[sanitiseUrl(url)] = 0;
 	var nsp = io.of(sanitiseUrl(url));
 	nsp.on('connection', function (socket) {
+		var jumpId = 0;
+		var moveId = 0;
+		setTimeout(() => {socket.broadcast.emit('connected', {id: activePlayers[sanitiseUrl(url)]})}, 100);
 		console.log('Connected');
 		activePlayers[sanitiseUrl(url)]++;
 		console.log(activePlayers[sanitiseUrl(url)]);
 		if(activePlayers[sanitiseUrl(url)] > 1){
 			socket.emit('pushConnectionId', {id: 2})
+			socket.emit('connected', {id: 100})
 		}
 		socket.on('jump', function (data) {
-			socket.broadcast.emit('jump', {playerId: data.playerId})
+			jumpId++;
+			socket.broadcast.emit('jump', {playerId: data.playerId, jumpId: jumpId})
+		console.log(data);
+		});
+
+		socket.on('move', function (data) {
+			moveId++;
+			socket.broadcast.emit('move', {playerId: data.playerId, dir: data.dir, moveId: moveId})
 		console.log(data);
 		});
 
